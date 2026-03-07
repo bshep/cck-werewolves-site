@@ -24,18 +24,12 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Build and Deploy to Docker Registry
-        uses: mr-smithers-excellent/docker-build-push@v6
+      - name: Deploy to Server via SCP
+        uses: appleboy/scp-action@v0.1.7
         with:
-          image: wwes-public/h2p
-          tags: latest
-          registry: ${{ secrets.DOCKER_REGISTRY }}
-          dockerfile: .github/workflows/Dockerfile.deploy
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Call update webhook
-        uses: joelwmale/webhook-action@2.3.2
-        with:
-          url: ${{ secrets.UPDATE_URL }}
-          body: "{'commit': '${{ github.sha }}'}"
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "build/*"
+          target: "/var/www/html" # REPLACE WITH YOUR WEB ROOT (e.g., /var/www/html)
+          strip_components: 1
