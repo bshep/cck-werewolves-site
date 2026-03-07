@@ -6,7 +6,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "werewolv.es",
+  title: "CCK Werewolves",
   favicon: "favicon.ico",
 
   // Set the production url of your site here

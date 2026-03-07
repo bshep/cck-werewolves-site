@@ -1,5 +1,5 @@
 {
-  "name": "werewolv.es",
+  "name": "CCK Werewolves",
   "icons": [
     {
       "src": "/guides/android-chrome-192x192.png?v=aljdORjeB6",
@@ -13,6 +13,6 @@
     }
   ],
   "theme_color": "#000000",
-  "start_url": "https://werewolv.es",
+  "start_url": "https://werewolf.chaotic-coven.com",
   "display": "standalone"
 }

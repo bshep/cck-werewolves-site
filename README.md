@@ -1,6 +1,6 @@
 # how-to-play
 
-The official [How To Play](https://werewolv.es/guides) guide repo for [werewolv.es](https://werewolv.es).
+The official [How To Play](https://werewolf.chaotic-coven.com) guide repo for CCK Werewolves.
 
 ## Writing guides
 
