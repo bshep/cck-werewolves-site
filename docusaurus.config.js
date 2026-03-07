@@ -10,10 +10,10 @@ const config = {
   favicon: "favicon.ico",
 
   // Set the production url of your site here
-  url: "https://werewolv.es",
+  url: "https://werewolf.chaotic-coven.com",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/guides",
+  baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -127,19 +127,19 @@ const config = {
       // Replace with your project's social card
       // image: 'img/docusaurus-social-card.jpg',
       navbar: {
-        title: "werewolv.es",
+        title: "werewolf.chaotic-coven.com",
         logo: {
-          alt: "werewolv.es",
+          alt: "werewolf.chaotic-coven.com",
           src: "favicon-32x32.png",
         },
         items: [
           {
-            to: "https://werewolv.es",
+            to: "https://werewolf.chaotic-coven.com",
             label: "Play Online Werewolf",
             position: "left",
           },
           {
-            href: "https://github.com/werewolv-es/how-to-play",
+            href: "https://github.com/bshep/how-to-play",
             "aria-label": "GitHub",
             className: "github-link",
             position: "right",
