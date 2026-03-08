@@ -59,7 +59,7 @@ categories.forEach(category => {
     const cleanSummary = summary.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*/g, '');
     const shortSummary = cleanSummary.length > 150 ? cleanSummary.substring(0, 147) + '...' : cleanSummary;
 
-    table += `| **${data.title}** | ${categoryLabels[category]} | ${shortSummary} |
+    table += `| **${data.title}** | ${categoryLabels[category]} | ${cleanSummary} |
 `;
   });
 });
