@@ -5,6 +5,7 @@ const { globSync } = require('glob');
 
 const docsDir = path.join(__dirname, '../docs');
 const outputFile = path.join(__dirname, '../docs/role-summary.mdx');
+const csvFile = path.join(__dirname, '../static/roles-reference.csv');
 
 // Define categories to include, ordered for the table
 const categories = [
@@ -31,7 +32,8 @@ const categoryLabels = {
 };
 
 let sections = "";
-let cheatSheets = "\n## Downloadable Cheat Sheets\n\n";
+let cardThumbnails = "";
+let allRolesData = [["Role", "Category", "Summary"]];
 
 categories.forEach(category => {
   const files = globSync(path.join(docsDir, category, '*.mdx').replace(/\\/g, '/'));
@@ -42,9 +44,9 @@ categories.forEach(category => {
   table += "| Role | Summary |\n| :--- | :--- |\n";
   let hasRoles = false;
 
-  // Add to cheat sheets section
-  cheatSheets += `### ${categoryLabels[category]}\n\n`;
-  cheatSheets += `[<img src="/category-cards/${category}.png" width="200" height="200" style={{objectFit: 'cover', borderRadius: '8px', border: '1px solid #444'}} alt="${categoryLabels[category]} Card" />](/category-cards/${category}.png)\n\n`;
+  // Add to cards section
+  cardThumbnails += `#### ${categoryLabels[category]}\n\n`;
+  cardThumbnails += `[<img src="/category-cards/${category}.png" width="200" height="200" style={{objectFit: 'cover', borderRadius: '8px', border: '1px solid #444'}} alt="${categoryLabels[category]} Card" />](/category-cards/${category}.png)\n\n`;
 
   // Sort files alphabetically by filename
   files.sort().forEach(file => {
@@ -64,13 +66,14 @@ categories.forEach(category => {
       for (const line of lines) {
         const trimmed = line.trim();
         if (trimmed && !trimmed.startsWith('#') && !trimmed.startsWith('<') && !trimmed.startsWith('import')) {
-          summary = trimmed.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*/g, '');
+          summary = trimmed.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*/g, '').replace(/"/g, '""');
           break;
         }
       }
     }
 
     table += `| **${data.title}** | ${summary || ""} |\n`;
+    allRolesData.push([data.title, categoryLabels[category], summary || ""]);
     hasRoles = true;
   });
 
@@ -78,6 +81,11 @@ categories.forEach(category => {
     sections += table;
   }
 });
+
+// Generate CSV
+const csvContent = allRolesData.map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
+fs.writeFileSync(csvFile, csvContent);
+console.log('CSV generated at ' + csvFile);
 
 const content = `---
 title: Role Reference Sheet
@@ -91,7 +99,17 @@ This is a quick summary of all roles available in CCK Werewolves.
 
 ${sections}
 
-${cheatSheets}
+## Downloadable Cheat Sheets
+
+### Spreadsheets
+
+- [Download Roles Reference (CSV)](/roles-reference.csv)
+
+### Cards
+
+${cardThumbnails}
+
+
 
 :::info
 This page is automatically generated from the role documentation.
