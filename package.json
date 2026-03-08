@@ -5,7 +5,8 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
-    "build": "docusaurus build",
+    "build": "npm run generate:category-pngs && npm run generate:summary && npm run build:docusaurus",
+    "build:docusaurus": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy:beta:surge": "surge build --domain https://h2p-beta.surge.sh",
     "deploy:beta": "npm run build && npm run deploy:beta:surge",

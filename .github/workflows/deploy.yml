@@ -36,7 +36,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run generate:summary && npm run build
+        run: npm run build
 
       - name: Deploy to Server via SCP
         uses: appleboy/scp-action@v0.1.7
