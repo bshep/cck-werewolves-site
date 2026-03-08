@@ -20,21 +20,28 @@ const categories = [
 
 // Map folder names to display names
 const categoryLabels = {
-  'village': 'Village',
-  'wolfpack': 'Wolfpack',
-  'coven': 'Coven',
-  'undead': 'Undead',
-  'vampires': 'Vampires',
-  'neutral': 'Neutral',
+  'village': 'The Village',
+  'wolfpack': 'The Wolfpack',
+  'coven': 'The Coven',
+  'undead': 'The Undead',
+  'vampires': 'The Vampires',
+  'neutral': 'Neutral Roles',
   'bloodmoon-cult': 'Bloodmoon Cult',
-  'holiday-roles': 'Holiday'
+  'holiday-roles': 'Holiday Roles'
 };
 
-let table = "| Role | Category | Summary |\n| :--- | :--- | :--- |\n";
+let sections = "";
 
 categories.forEach(category => {
   const files = globSync(path.join(docsDir, category, '*.mdx').replace(/\\/g, '/'));
   
+  if (files.length === 0) return;
+
+  let table = `\n## ${categoryLabels[category]}\n\n`;
+  table += `![${categoryLabels[category]} Card](@site/docs/assets/category-pngs/${category}.png)\n\n`;
+  table += "| Role | Summary |\n| :--- | :--- |\n";
+  let hasRoles = false;
+
   // Sort files alphabetically by filename
   files.sort().forEach(file => {
     const content = fs.readFileSync(file, 'utf8');
@@ -44,24 +51,28 @@ categories.forEach(category => {
     const fileName = path.basename(file, '.mdx');
     if (fileName === category) return;
 
-    // Extract the first non-header, non-empty paragraph
-    const lines = body.split('\n');
-    let summary = "";
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (trimmed && !trimmed.startsWith('#') && !trimmed.startsWith('<') && !trimmed.startsWith('import')) {
-        summary = trimmed;
-        break;
+    // Use 'summary' from frontmatter if present, otherwise extract from body
+    let summary = data.summary;
+    
+    if (!summary) {
+      // Fallback: Extract the first non-header, non-empty paragraph
+      const lines = body.split('\n');
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed && !trimmed.startsWith('#') && !trimmed.startsWith('<') && !trimmed.startsWith('import')) {
+          summary = trimmed.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*/g, '');
+          break;
+        }
       }
     }
 
-    // Clean up markdown links or formatting from summary for the table
-    const cleanSummary = summary.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*/g, '');
-    const shortSummary = cleanSummary.length > 150 ? cleanSummary.substring(0, 147) + '...' : cleanSummary;
-
-    table += `| **${data.title}** | ${categoryLabels[category]} | ${cleanSummary} |
-`;
+    table += `| **${data.title}** | ${summary || ""} |\n`;
+    hasRoles = true;
   });
+
+  if (hasRoles) {
+    sections += table;
+  }
 });
 
 const content = `---
@@ -74,7 +85,7 @@ sidebar_class_name: hidden
 
 This is a quick summary of all roles available in CCK Werewolves.
 
-${table}
+${sections}
 
 :::info
 This page is automatically generated from the role documentation.
