@@ -91,6 +91,8 @@ const content = `---
 title: Role Reference Sheet
 slug: /role-reference
 sidebar_class_name: hidden
+toc_min_heading_level: 2
+toc_max_heading_level: 5
 ---
 
 # Role Reference Sheet
