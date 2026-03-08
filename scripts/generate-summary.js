@@ -31,6 +31,7 @@ const categoryLabels = {
 };
 
 let sections = "";
+let cheatSheets = "\n## Downloadable Cheat Sheets\n\n";
 
 categories.forEach(category => {
   const files = globSync(path.join(docsDir, category, '*.mdx').replace(/\\/g, '/'));
@@ -38,9 +39,12 @@ categories.forEach(category => {
   if (files.length === 0) return;
 
   let table = `\n## ${categoryLabels[category]}\n\n`;
-  table += `![${categoryLabels[category]} Card](@site/docs/assets/category-pngs/${category}.png)\n\n`;
   table += "| Role | Summary |\n| :--- | :--- |\n";
   let hasRoles = false;
+
+  // Add to cheat sheets section
+  cheatSheets += `### ${categoryLabels[category]}\n\n`;
+  cheatSheets += `[<img src="/category-cards/${category}.png" width="200" height="200" style={{objectFit: 'cover', borderRadius: '8px', border: '1px solid #444'}} alt="${categoryLabels[category]} Card" />](/category-cards/${category}.png)\n\n`;
 
   // Sort files alphabetically by filename
   files.sort().forEach(file => {
@@ -86,6 +90,8 @@ sidebar_class_name: hidden
 This is a quick summary of all roles available in CCK Werewolves.
 
 ${sections}
+
+${cheatSheets}
 
 :::info
 This page is automatically generated from the role documentation.

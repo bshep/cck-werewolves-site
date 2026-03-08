@@ -20,4 +20,4 @@ yarn-debug.log*
 yarn-error.log*
 static/role-reference-sheet.pdf
 docs/role-summary.mdx
-docs/assets/category-pngs/*
+static/category-cards/*

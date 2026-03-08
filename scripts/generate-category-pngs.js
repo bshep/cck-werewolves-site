@@ -6,7 +6,7 @@ const matter = require('gray-matter');
 const { globSync } = require('glob');
 
 const docsDir = path.join(__dirname, '../docs');
-const outputDir = path.join(__dirname, '../docs/assets/category-pngs');
+const outputDir = path.join(__dirname, '../static/category-cards');
 const fontPath = path.join(__dirname, 'fonts/Roboto-Bold.ttf');
 const assetsDir = path.join(__dirname, 'assets');
 
