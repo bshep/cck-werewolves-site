@@ -74,9 +74,6 @@ function renderIconWithStatus(iconBase64, isActive) {
 }
 
 function getCardTemplate(title, roles, color, height = '100%') {
-  // Determine unique categories present in the selected roles
-  const presentCategories = [...new Set(roles.map(r => r.category))].sort();
-
   return {
     type: 'div',
     props: {
@@ -106,43 +103,6 @@ function getCardTemplate(title, roles, color, height = '100%') {
             children: title,
           },
         },
-        // Color Legend Section
-        {
-          type: 'div',
-          props: {
-            style: {
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              gap: '20px',
-              marginBottom: '30px',
-              padding: '10px',
-              backgroundColor: 'rgba(255,255,255,0.02)',
-              borderRadius: '8px',
-            },
-            children: presentCategories.map(cat => ({
-              type: 'div',
-              props: {
-                style: { display: 'flex', alignItems: 'center', fontSize: '14px', opacity: 0.8 },
-                children: [
-                  {
-                    type: 'div',
-                    props: {
-                      style: {
-                        width: '12px',
-                        height: '12px',
-                        borderRadius: '2px',
-                        backgroundColor: categoryColors[cat] || '#fff',
-                        marginRight: '8px',
-                      }
-                    }
-                  },
-                  { type: 'span', props: { children: categoryLabels[cat] || cat } }
-                ]
-              }
-            }))
-          }
-        },
         {
           type: 'div',
           props: {
@@ -163,6 +123,7 @@ function getCardTemplate(title, roles, color, height = '100%') {
                   padding: '15px',
                   borderRadius: '8px',
                   backgroundColor: 'rgba(255,255,255,0.05)',
+                  borderLeft: `4px solid ${categoryColors[role.category] || '#fff'}`
                 },
                 children: [
                   {
@@ -171,9 +132,26 @@ function getCardTemplate(title, roles, color, height = '100%') {
                       style: {
                         display: 'flex',
                         alignItems: 'center',
+                        justifyContent: 'space-between',
+                        fontSize: '12px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px',
+                        opacity: 0.7,
+                        color: categoryColors[role.category] || '#fff',
+                        marginBottom: '4px'
+                      },
+                      children: `Team: ${categoryLabels[role.category] || role.category}`
+                    }
+                  },
+                  {
+                    type: 'div',
+                    props: {
+                      style: {
+                        display: 'flex',
+                        alignItems: 'center',
                         fontSize: '24px',
                         fontWeight: 'bold',
-                        color: role.color || color || '#fff',
+                        color: role.color,
                         marginBottom: '4px',
                       },
                       children: [
