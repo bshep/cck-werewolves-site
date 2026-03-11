@@ -17,6 +17,7 @@
     "typecheck": "tsc",
     "generate:summary": "node scripts/generate-summary.js",
     "generate:category-pngs": "node scripts/generate-category-pngs.js",
+    "generate:custom-card": "node scripts/generate-custom-card.js",
     "pretty": "pretty-quick --pattern '{.,docs/,src/}**/*.{js,ts,jsx,tsx,md,mdx}'",
     "prepare": "husky install"
   },
