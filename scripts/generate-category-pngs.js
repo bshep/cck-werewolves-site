@@ -18,6 +18,10 @@ if (!fs.existsSync(outputDir)) {
 const fontData = fs.readFileSync(fontPath);
 const movementIconBuffer = fs.readFileSync(path.join(assetsDir, 'movement.svg'));
 const movementIconBase64 = `data:image/svg+xml;base64,${movementIconBuffer.toString('base64')}`;
+const killerIconBuffer = fs.readFileSync(path.join(assetsDir, 'killer.svg'));
+const killerIconBase64 = `data:image/svg+xml;base64,${killerIconBuffer.toString('base64')}`;
+const witchcraftIconBuffer = fs.readFileSync(path.join(assetsDir, 'witchcraft.svg'));
+const witchcraftIconBase64 = `data:image/svg+xml;base64,${witchcraftIconBuffer.toString('base64')}`;
 
 const categories = [
   'village',
@@ -128,6 +132,30 @@ function getCategoryTemplate(category, roles, height = '100%') {
                               height: '24px'
                             }
                           }
+                        },
+                        role.killer && {
+                          type: 'img',
+                          props: {
+                            src: killerIconBase64,
+                            style: { 
+                              marginLeft: '10px', 
+                              opacity: 0.8,
+                              width: '24px',
+                              height: '24px'
+                            }
+                          }
+                        },
+                        role.witchcraft && {
+                          type: 'img',
+                          props: {
+                            src: witchcraftIconBase64,
+                            style: { 
+                              marginLeft: '10px', 
+                              opacity: 0.8,
+                              width: '24px',
+                              height: '24px'
+                            }
+                          }
                         }
                       ].filter(Boolean)
                     },
@@ -189,7 +217,13 @@ async function generateImages() {
             }
           }
         }
-        return { title: data.title, summary: summary || "", moves: data.moves === true };
+        return { 
+          title: data.title, 
+          summary: summary || "", 
+          moves: data.moves === true,
+          killer: data.killer === true,
+          witchcraft: data.witchcraft === true
+        };
       })
       .filter(Boolean)
       .sort((a, b) => a.title.localeCompare(b.title));
