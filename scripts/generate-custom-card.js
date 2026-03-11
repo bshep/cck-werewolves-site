@@ -5,6 +5,12 @@ const { Resvg } = require('@resvg/resvg-js');
 const matter = require('gray-matter');
 const { globSync } = require('glob');
 
+const { 
+  categoryColors, 
+  categoryLabels,
+  getRoleColor 
+} = require('./config');
+
 const docsDir = path.join(__dirname, '../docs');
 const outputDir = path.join(__dirname, '../static/custom-cards');
 const fontPath = path.join(__dirname, 'fonts/Roboto-Bold.ttf');
@@ -24,17 +30,6 @@ const witchcraftIconBuffer = fs.readFileSync(path.join(assetsDir, 'witchcraft.sv
 const witchcraftIconBase64 = `data:image/svg+xml;base64,${witchcraftIconBuffer.toString('base64')}`;
 const prohibitedIconBuffer = fs.readFileSync(path.join(assetsDir, 'prohibited.svg'));
 const prohibitedIconBase64 = `data:image/svg+xml;base64,${prohibitedIconBuffer.toString('base64')}`;
-
-const categoryColors = {
-  'village': '#4caf50',
-  'wolfpack': '#f44336',
-  'coven': '#9c27b0',
-  'undead': '#795548',
-  'vampires': '#e91e63',
-  'neutral': '#ffeb3b',
-  'bloodmoon-cult': '#ff9800',
-  'holiday-roles': '#00bcd4'
-};
 
 function renderIconWithStatus(iconBase64, isActive) {
   return {
@@ -79,6 +74,9 @@ function renderIconWithStatus(iconBase64, isActive) {
 }
 
 function getCardTemplate(title, roles, color, height = '100%') {
+  // Determine unique categories present in the selected roles
+  const presentCategories = [...new Set(roles.map(r => r.category))].sort();
+
   return {
     type: 'div',
     props: {
@@ -100,13 +98,50 @@ function getCardTemplate(title, roles, color, height = '100%') {
             style: {
               fontSize: '60px',
               fontWeight: 'bold',
-              marginBottom: '60px',
+              marginBottom: '40px',
               color: color || '#fff',
               borderBottom: `2px solid ${color || '#fff'}`,
               paddingBottom: '10px',
             },
             children: title,
           },
+        },
+        // Color Legend Section
+        {
+          type: 'div',
+          props: {
+            style: {
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: '20px',
+              marginBottom: '30px',
+              padding: '10px',
+              backgroundColor: 'rgba(255,255,255,0.02)',
+              borderRadius: '8px',
+            },
+            children: presentCategories.map(cat => ({
+              type: 'div',
+              props: {
+                style: { display: 'flex', alignItems: 'center', fontSize: '14px', opacity: 0.8 },
+                children: [
+                  {
+                    type: 'div',
+                    props: {
+                      style: {
+                        width: '12px',
+                        height: '12px',
+                        borderRadius: '2px',
+                        backgroundColor: categoryColors[cat] || '#fff',
+                        marginRight: '8px',
+                      }
+                    }
+                  },
+                  { type: 'span', props: { children: categoryLabels[cat] || cat } }
+                ]
+              }
+            }))
+          }
         },
         {
           type: 'div',
@@ -288,7 +323,7 @@ async function generateCustomCard() {
       killer: data.killer === true,
       witchcraft: data.witchcraft === true,
       category: category,
-      color: categoryColors[category]
+      color: getRoleColor(data.member, category)
     };
 
     rolesMap[fileName.toLowerCase()] = roleData;

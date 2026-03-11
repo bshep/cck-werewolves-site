@@ -5,6 +5,13 @@ const { Resvg } = require('@resvg/resvg-js');
 const matter = require('gray-matter');
 const { globSync } = require('glob');
 
+const { 
+  categories, 
+  categoryLabels, 
+  categoryColors, 
+  getRoleColor 
+} = require('./config');
+
 const docsDir = path.join(__dirname, '../docs');
 const outputDir = path.join(__dirname, '../static/category-cards');
 const fontPath = path.join(__dirname, 'fonts/Roboto-Bold.ttf');
@@ -24,39 +31,6 @@ const witchcraftIconBuffer = fs.readFileSync(path.join(assetsDir, 'witchcraft.sv
 const witchcraftIconBase64 = `data:image/svg+xml;base64,${witchcraftIconBuffer.toString('base64')}`;
 const prohibitedIconBuffer = fs.readFileSync(path.join(assetsDir, 'prohibited.svg'));
 const prohibitedIconBase64 = `data:image/svg+xml;base64,${prohibitedIconBuffer.toString('base64')}`;
-
-const categories = [
-  'village',
-  'wolfpack',
-  'coven',
-  'undead',
-  'vampires',
-  'neutral',
-  'bloodmoon-cult',
-  'holiday-roles'
-];
-
-const categoryLabels = {
-  'village': 'The Village',
-  'wolfpack': 'The Wolfpack',
-  'coven': 'The Coven',
-  'undead': 'The Undead',
-  'vampires': 'The Vampires',
-  'neutral': 'Neutral Roles',
-  'bloodmoon-cult': 'Bloodmoon Cult',
-  'holiday-roles': 'Holiday Roles'
-};
-
-const categoryColors = {
-  'village': '#4caf50',
-  'wolfpack': '#f44336',
-  'coven': '#9c27b0',
-  'undead': '#795548',
-  'vampires': '#e91e63',
-  'neutral': '#ffeb3b',
-  'bloodmoon-cult': '#ff9800',
-  'holiday-roles': '#00bcd4'
-};
 
 function renderIconWithStatus(iconBase64, isActive) {
   return {
@@ -160,7 +134,7 @@ function getCategoryTemplate(category, roles, height = '100%') {
                         alignItems: 'center',
                         fontSize: '24px',
                         fontWeight: 'bold',
-                        color: categoryColors[category] || '#fff',
+                        color: role.color,
                         marginBottom: '4px',
                       },
                       children: [
@@ -281,7 +255,8 @@ async function generateImages() {
           summary: summary || "", 
           moves: data.moves === true,
           killer: data.killer === true,
-          witchcraft: data.witchcraft === true
+          witchcraft: data.witchcraft === true,
+          color: getRoleColor(data.member, category)
         };
       })
       .filter(Boolean)

@@ -2,34 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
 const { globSync } = require('glob');
+const { categories, categoryLabels } = require('./config');
 
 const docsDir = path.join(__dirname, '../docs');
 const outputFile = path.join(__dirname, '../docs/role-summary.mdx');
-const csvFile = path.join(__dirname, '../static/roles-reference.csv');
-
-// Define categories to include, ordered for the table
-const categories = [
-  'village',
-  'wolfpack',
-  'coven',
-  'undead',
-  'vampires',
-  'neutral',
-  'bloodmoon-cult',
-  'holiday-roles'
-];
-
-// Map folder names to display names
-const categoryLabels = {
-  'village': 'The Village',
-  'wolfpack': 'The Wolfpack',
-  'coven': 'The Coven',
-  'undead': 'The Undead',
-  'vampires': 'The Vampires',
-  'neutral': 'Neutral Roles',
-  'bloodmoon-cult': 'Bloodmoon Cult',
-  'holiday-roles': 'Holiday Roles'
-};
 
 let sections = "";
 let cardThumbnails = "";
