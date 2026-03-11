@@ -6,6 +6,7 @@ const { categories, categoryLabels } = require('./config');
 
 const docsDir = path.join(__dirname, '../docs');
 const outputFile = path.join(__dirname, '../docs/role-summary.mdx');
+const csvFile = path.join(__dirname, '../static/roles-reference.csv');
 
 let sections = "";
 let cardThumbnails = "";
