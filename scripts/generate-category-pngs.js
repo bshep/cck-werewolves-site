@@ -22,6 +22,8 @@ const killerIconBuffer = fs.readFileSync(path.join(assetsDir, 'killer.svg'));
 const killerIconBase64 = `data:image/svg+xml;base64,${killerIconBuffer.toString('base64')}`;
 const witchcraftIconBuffer = fs.readFileSync(path.join(assetsDir, 'witchcraft.svg'));
 const witchcraftIconBase64 = `data:image/svg+xml;base64,${witchcraftIconBuffer.toString('base64')}`;
+const prohibitedIconBuffer = fs.readFileSync(path.join(assetsDir, 'prohibited.svg'));
+const prohibitedIconBase64 = `data:image/svg+xml;base64,${prohibitedIconBuffer.toString('base64')}`;
 
 const categories = [
   'village',
@@ -55,6 +57,48 @@ const categoryColors = {
   'bloodmoon-cult': '#ff9800',
   'holiday-roles': '#00bcd4'
 };
+
+function renderIconWithStatus(iconBase64, isActive) {
+  return {
+    type: 'div',
+    props: {
+      style: { 
+        position: 'relative', 
+        display: 'flex', 
+        marginLeft: '10px',
+        width: '24px',
+        height: '24px',
+      },
+      children: [
+        {
+          type: 'img',
+          props: {
+            src: iconBase64,
+            style: { 
+              opacity: isActive ? 0.8 : 0.15,
+              width: '24px',
+              height: '24px'
+            }
+          }
+        },
+        !isActive && {
+          type: 'img',
+          props: {
+            src: prohibitedIconBase64,
+            style: { 
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '24px',
+              height: '24px',
+              opacity: 0.8
+            }
+          }
+        }
+      ].filter(Boolean)
+    }
+  };
+}
 
 function getCategoryTemplate(category, roles, height = '100%') {
   return {
@@ -121,42 +165,9 @@ function getCategoryTemplate(category, roles, height = '100%') {
                       },
                       children: [
                         { type: 'span', props: { children: role.title } },
-                        role.moves && {
-                          type: 'img',
-                          props: {
-                            src: movementIconBase64,
-                            style: { 
-                              marginLeft: '10px', 
-                              opacity: 0.8,
-                              width: '24px',
-                              height: '24px'
-                            }
-                          }
-                        },
-                        role.killer && {
-                          type: 'img',
-                          props: {
-                            src: killerIconBase64,
-                            style: { 
-                              marginLeft: '10px', 
-                              opacity: 0.8,
-                              width: '24px',
-                              height: '24px'
-                            }
-                          }
-                        },
-                        role.witchcraft && {
-                          type: 'img',
-                          props: {
-                            src: witchcraftIconBase64,
-                            style: { 
-                              marginLeft: '10px', 
-                              opacity: 0.8,
-                              width: '24px',
-                              height: '24px'
-                            }
-                          }
-                        }
+                        renderIconWithStatus(movementIconBase64, role.moves),
+                        renderIconWithStatus(killerIconBase64, role.killer),
+                        renderIconWithStatus(witchcraftIconBase64, role.witchcraft)
                       ].filter(Boolean)
                     },
                   },
@@ -182,13 +193,61 @@ function getCategoryTemplate(category, roles, height = '100%') {
             style: {
               marginTop: '40px',
               fontSize: '18px',
-              opacity: 0.4,
-              textAlign: 'right',
+              opacity: 0.5,
               width: '100%',
               display: 'flex',
-              justifyContent: 'flex-end',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderTop: '1px solid rgba(255,255,255,0.1)',
+              paddingTop: '20px',
             },
-            children: 'werewolf.chaotic-coven.com',
+            children: [
+              {
+                type: 'div',
+                props: {
+                  style: { display: 'flex', flexDirection: 'row', gap: '30px' },
+                  children: [
+                    {
+                      type: 'div',
+                      props: {
+                        style: { display: 'flex', alignItems: 'center' },
+                        children: [
+                          { type: 'img', props: { src: movementIconBase64, style: { width: '20px', height: '20px', marginRight: '8px' } } },
+                          { type: 'span', props: { children: 'Movement' } }
+                        ]
+                      }
+                    },
+                    {
+                      type: 'div',
+                      props: {
+                        style: { display: 'flex', alignItems: 'center' },
+                        children: [
+                          { type: 'img', props: { src: killerIconBase64, style: { width: '20px', height: '20px', marginRight: '8px' } } },
+                          { type: 'span', props: { children: 'Killer' } }
+                        ]
+                      }
+                    },
+                    {
+                      type: 'div',
+                      props: {
+                        style: { display: 'flex', alignItems: 'center' },
+                        children: [
+                          { type: 'img', props: { src: witchcraftIconBase64, style: { width: '20px', height: '20px', marginRight: '8px' } } },
+                          { type: 'span', props: { children: 'Witchcraft' } }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                type: 'div',
+                props: {
+                  children: 'werewolf.chaotic-coven.com',
+                },
+              }
+            ],
           },
         },
       ],
