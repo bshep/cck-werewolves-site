@@ -45,5 +45,5 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           source: "build/*"
-          target: "/var/www/html" # REPLACE WITH YOUR WEB ROOT (e.g., /var/www/html)
+          target: "/var/www/chaotic-coven.com/werewolf/html" # REPLACE WITH YOUR WEB ROOT (e.g., /var/www/html)
           strip_components: 1
